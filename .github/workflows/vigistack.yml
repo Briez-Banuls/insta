@@ -1,0 +1,26 @@
+# VigieStack CI Configuration — managed automatically, do not edit.
+name: VigieStack Analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_base_branch:
+        description: Branch to analyse
+        type: string
+        default: main
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  pull-requests: write
+  contents: write
+  issues: write
+
+jobs:
+  analysis:
+    uses: valentin-briezbanuls/renovate-ci/.github/workflows/renovate-scan.yml@main
+    with:
+      target_base_branch: ${{ inputs.target_base_branch || 'main' }}
+    secrets:
+      RENOVATE_TOKEN: ${{ vars.RENOVATE_TOKEN }}
+      DASHBOARD_WEBHOOK_URL: ${{ vars.VIGISTACK_REPORT_URL }}
